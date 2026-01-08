@@ -4,6 +4,8 @@ import { FadeIn } from "@/components/animations/FadeIn";
 import { useParams, Navigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase, type Article } from "@/lib/supabase";
+import ReactMarkdown from "react-markdown";
+import rehypeHighlight from "rehype-highlight";
 
 export default function ArticlePage() {
   const { slug } = useParams();

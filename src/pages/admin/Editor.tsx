@@ -73,7 +73,11 @@ export default function Editor() {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) throw new Error("No session");
 
-      const payload = { ...formData, user_id: session.user.id };
+      const payload = { 
+        ...formData, 
+        category: formData.category.trim() || "随笔", // Default to "随笔" if empty
+        user_id: session.user.id 
+      };
 
       if (editingId) {
         await supabase.from('articles').update(payload).eq('id', editingId);
@@ -157,7 +161,7 @@ export default function Editor() {
                         className="w-full px-4 py-2 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
                         value={formData.category}
                         onChange={(e) => setFormData({...formData, category: e.target.value})}
-                        placeholder="随笔 (默认)"
+                        required
                       />
                     </div>
                     <div>
@@ -191,15 +195,16 @@ export default function Editor() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-1 ml-1">Content (HTML)</label>
-                    <textarea
-                      className="w-full px-4 py-2 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700 font-mono text-sm"
-                      rows={12}
-                      value={formData.content}
-                      onChange={(e) => setFormData({...formData, content: e.target.value})}
-                      required
-                    />
-                    <p className="text-xs text-muted-foreground mt-1 ml-1">Supports HTML tags like &lt;p&gt;, &lt;h2&gt;, &lt;blockquote&gt;</p>
+                    <label className="block text-sm font-medium mb-1 ml-1">Content (Markdown)</label>
+                    <div data-color-mode="auto">
+                        <MDEditor
+                            value={formData.content}
+                            onChange={(val) => setFormData({...formData, content: val || ""})}
+                            height={400}
+                            preview="edit"
+                            className="rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-700"
+                        />
+                    </div>
                   </div>
 
                   <div className="flex gap-4 pt-2">
