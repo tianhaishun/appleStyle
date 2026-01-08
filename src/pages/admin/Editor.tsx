@@ -157,7 +157,7 @@ export default function Editor() {
                         className="w-full px-4 py-2 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
                         value={formData.category}
                         onChange={(e) => setFormData({...formData, category: e.target.value})}
-                        required
+                        placeholder="随笔 (默认)"
                       />
                     </div>
                     <div>
