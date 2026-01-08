@@ -8,6 +8,7 @@ import NotFound from "@/pages/NotFound";
 import Login from "@/pages/admin/Login";
 import Register from "@/pages/Register";
 import Editor from "@/pages/admin/Editor";
+import Dashboard from "@/pages/Dashboard";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -34,6 +35,7 @@ export default function App() {
         <Route path="/register" element={<Register />} />
         
         {/* Protected Routes */}
+        <Route path="/dashboard" element={<Dashboard />} />
         <Route path="/editor" element={<Editor />} />
         <Route path="/admin/editor" element={<Editor />} /> {/* Keep old route just in case */}
         

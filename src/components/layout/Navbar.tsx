@@ -1,10 +1,10 @@
-import { useState } from "react";
-import { motion, useScroll, useMotionValueEvent } from "framer-motion";
+import { useState, useRef } from "react";
+import { motion, useScroll, useMotionValueEvent, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/ui/Container";
-import { Menu, X, Sun, Moon, User } from "lucide-react";
+import { Menu, X, Sun, Moon, User, LogOut, LayoutDashboard, PenSquare } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { supabase } from "@/lib/supabase";
 import { useEffect } from "react";
 
@@ -17,10 +17,13 @@ const blogLinks = [
 export function Navbar() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const { scrollY } = useScroll();
   const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
+  const navigate = useNavigate();
   const [user, setUser] = useState<any>(null);
+  const userMenuRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
@@ -33,8 +36,25 @@ export function Navbar() {
       setUser(session?.user ?? null);
     });
 
-    return () => subscription.unsubscribe();
+    // Click outside listener for user menu
+    const handleClickOutside = (event: MouseEvent) => {
+        if (userMenuRef.current && !userMenuRef.current.contains(event.target as Node)) {
+            setIsUserMenuOpen(false);
+        }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+        subscription.unsubscribe();
+        document.removeEventListener("mousedown", handleClickOutside);
+    };
   }, []);
+
+  const handleLogout = async () => {
+      await supabase.auth.signOut();
+      setIsUserMenuOpen(false);
+      navigate("/");
+  };
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 0);
@@ -114,9 +134,39 @@ export function Navbar() {
             {/* Dark Mode Toggle - Right side */}
             <div className="absolute right-6 lg:right-8 flex items-center gap-4">
                {user ? (
-                 <Link to="/editor" className="hidden md:flex items-center gap-2 text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
-                    <User size={18} />
-                 </Link>
+                 <div className="relative" ref={userMenuRef}>
+                     <button 
+                        onClick={() => setIsUserMenuOpen(!isUserMenuOpen)}
+                        className="hidden md:flex items-center justify-center w-8 h-8 rounded-full bg-neutral-100 dark:bg-neutral-800 text-foreground/80 hover:text-foreground transition-colors"
+                     >
+                        {user.email?.[0].toUpperCase() || <User size={18} />}
+                     </button>
+
+                     <AnimatePresence>
+                         {isUserMenuOpen && (
+                             <motion.div
+                                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                                transition={{ duration: 0.1 }}
+                                className="absolute right-0 top-12 w-48 bg-white dark:bg-neutral-900 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-xl overflow-hidden py-1"
+                             >
+                                 <div className="px-4 py-2 border-b border-neutral-100 dark:border-neutral-800">
+                                     <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                                 </div>
+                                 <Link to="/dashboard" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
+                                     <LayoutDashboard size={16} /> Dashboard
+                                 </Link>
+                                 <Link to="/editor" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
+                                     <PenSquare size={16} /> Write Article
+                                 </Link>
+                                 <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-left">
+                                     <LogOut size={16} /> Logout
+                                 </button>
+                             </motion.div>
+                         )}
+                     </AnimatePresence>
+                 </div>
                ) : (
                  <Link to="/admin/login" className="hidden md:block text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
                    登录
@@ -157,7 +207,17 @@ export function Navbar() {
                <button onClick={() => { handleLinkClick('#projects'); }} className="text-left text-foreground/80 hover:text-foreground">项目</button>
                <div className="border-t border-neutral-200 dark:border-neutral-800 pt-6">
                  {user ? (
-                   <Link to="/editor" onClick={() => setIsMobileMenuOpen(false)} className="block text-foreground/80 hover:text-foreground">我的文章</Link>
+                   <>
+                       <Link to="/dashboard" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2 py-2 text-foreground/80 hover:text-foreground">
+                            <LayoutDashboard size={20} /> Dashboard
+                       </Link>
+                       <Link to="/editor" onClick={() => setIsMobileMenuOpen(false)} className="flex items-center gap-2 py-2 text-foreground/80 hover:text-foreground">
+                            <PenSquare size={20} /> Write Article
+                       </Link>
+                       <button onClick={() => { handleLogout(); setIsMobileMenuOpen(false); }} className="flex items-center gap-2 py-2 text-red-500">
+                            <LogOut size={20} /> Logout
+                       </button>
+                   </>
                  ) : (
                    <Link to="/admin/login" onClick={() => setIsMobileMenuOpen(false)} className="block text-foreground/80 hover:text-foreground">登录 / 注册</Link>
                  )}

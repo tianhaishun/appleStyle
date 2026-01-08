@@ -23,9 +23,9 @@ export default function Login() {
     });
 
     if (error) {
-      setError(error.message);
+      setError(error.message === "Invalid login credentials" ? "账号或密码错误" : error.message);
     } else {
-      navigate("/admin/editor");
+      navigate("/editor");
     }
     setLoading(false);
   };
@@ -35,10 +35,10 @@ export default function Login() {
       <Container className="max-w-md w-full">
         <FadeIn>
           <div className="bg-neutral-50 dark:bg-neutral-900 p-8 rounded-3xl border border-neutral-200/60 dark:border-neutral-800 shadow-sm">
-            <h1 className="text-2xl font-bold mb-6 text-center">Admin Login</h1>
+            <h1 className="text-2xl font-bold mb-6 text-center">登录</h1>
             <form onSubmit={handleLogin} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1 ml-1">Email</label>
+                <label className="block text-sm font-medium mb-1 ml-1">邮箱</label>
                 <input
                   type="email"
                   value={email}
@@ -48,7 +48,7 @@ export default function Login() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1 ml-1">Password</label>
+                <label className="block text-sm font-medium mb-1 ml-1">密码</label>
                 <input
                   type="password"
                   value={password}
@@ -59,7 +59,7 @@ export default function Login() {
               </div>
               {error && <p className="text-red-500 text-sm">{error}</p>}
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Loading..." : "Sign In"}
+                {loading ? "登录中..." : "登录"}
               </Button>
             </form>
           </div>
