@@ -108,7 +108,7 @@ export default function Editor() {
   };
 
   return (
-    <div className="min-h-screen bg-background py-20">
+    <div className="min-h-screen bg-background py-10">
       <Container>
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold">Article Editor</h1>
@@ -118,22 +118,21 @@ export default function Editor() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Form Section */}
-          <div className="lg:col-span-2">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8">
+          {/* Form Section - Takes up more space now (8/12 columns) */}
+          <div className="lg:col-span-9">
             <FadeIn>
               <div className="bg-neutral-50 dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-200/60 dark:border-neutral-800">
                 <h2 className="text-xl font-semibold mb-4">{editingId ? "Edit Article" : "New Article"}</h2>
                 <form onSubmit={handleSubmit} className="space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
+                  <div className="grid grid-cols-1 md:grid-cols-12 gap-4">
+                    <div className="md:col-span-6">
                       <label className="block text-sm font-medium mb-1 ml-1">Title</label>
                       <input
                         className="w-full px-4 py-2 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
                         value={formData.title}
                         onChange={(e) => {
                            const title = e.target.value;
-                           // Auto-generate slug if it's empty or looks like an auto-generated one
                            const shouldUpdateSlug = !formData.slug || formData.slug === generateSlug(formData.title);
                            setFormData({
                              ...formData, 
@@ -144,7 +143,7 @@ export default function Editor() {
                         required
                       />
                     </div>
-                    <div>
+                    <div className="md:col-span-6">
                       <label className="block text-sm font-medium mb-1 ml-1">Slug (URL)</label>
                       <input
                         className="w-full px-4 py-2 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
@@ -155,7 +154,8 @@ export default function Editor() {
                     </div>
                   </div>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  {/* Compact Metadata Row */}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                     <div>
                       <label className="block text-sm font-medium mb-1 ml-1">Category</label>
                       <input
@@ -182,6 +182,11 @@ export default function Editor() {
                         onChange={(e) => setFormData({...formData, read_time: e.target.value})}
                       />
                     </div>
+                    <div className="flex items-end">
+                       <Button type="submit" disabled={loading} className="w-full">
+                        {loading ? "Saving..." : (editingId ? "Update" : "Publish")}
+                      </Button>
+                    </div>
                   </div>
 
                   <div>
@@ -196,7 +201,7 @@ export default function Editor() {
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium mb-1 ml-1">Content (Markdown)</label>
+                    <label className="block text-sm font-medium mb-1 ml-1">Content</label>
                     <div data-color-mode="auto">
                         <MDEditor
                             value={formData.content}
@@ -212,49 +217,42 @@ export default function Editor() {
                         />
                     </div>
                   </div>
-
-                  <div className="flex gap-4 pt-2">
-                    <Button type="submit" disabled={loading}>
-                      {loading ? "Saving..." : (editingId ? "Update Article" : "Create Article")}
-                    </Button>
-                    {editingId && (
-                      <Button type="button" variant="outline" onClick={handleReset}>
-                        Cancel Edit
-                      </Button>
-                    )}
-                  </div>
+                  
+                  {editingId && (
+                      <div className="flex justify-end">
+                        <Button type="button" variant="outline" onClick={handleReset}>
+                            Cancel Edit
+                        </Button>
+                      </div>
+                  )}
                 </form>
               </div>
             </FadeIn>
           </div>
 
-          {/* List Section */}
-          <div className="lg:col-span-1">
+          {/* List Section - Moved to side and made compact */}
+          <div className="lg:col-span-3">
              <FadeIn delay={0.2}>
-               <div className="space-y-4">
-                 <h2 className="text-xl font-semibold mb-4">Existing Articles</h2>
-                 {articles.map((article) => (
-                   <div key={article.id} className="bg-white dark:bg-neutral-900 p-4 rounded-2xl border border-neutral-200 dark:border-neutral-800 shadow-sm flex flex-col gap-2">
-                     <h3 className="font-semibold">{article.title}</h3>
-                     <p className="text-xs text-muted-foreground">{article.date} • {article.category}</p>
-                     <div className="flex gap-2 mt-2">
-                       <button 
-                         onClick={() => handleEdit(article)}
-                         className="text-xs bg-blue-50 text-blue-600 px-3 py-1 rounded-full hover:bg-blue-100 dark:bg-blue-900/30 dark:text-blue-400"
-                       >
-                         Edit
-                       </button>
-                       <button 
-                         onClick={() => handleDelete(article.id)}
-                         className="text-xs bg-red-50 text-red-600 px-3 py-1 rounded-full hover:bg-red-100 dark:bg-red-900/30 dark:text-red-400"
-                       >
-                         Delete
-                       </button>
-                     </div>
-                   </div>
-                 ))}
+               <div className="sticky top-24 space-y-4">
+                 <h2 className="text-xl font-semibold mb-4">History</h2>
+                 <div className="space-y-3 max-h-[80vh] overflow-y-auto pr-2 custom-scrollbar">
+                    {articles.map((article) => (
+                    <div key={article.id} className="bg-white dark:bg-neutral-900 p-3 rounded-xl border border-neutral-200 dark:border-neutral-800 shadow-sm flex flex-col gap-2 hover:border-blue-500/50 transition-colors cursor-pointer" onClick={() => handleEdit(article)}>
+                        <h3 className="font-medium text-sm line-clamp-1">{article.title}</h3>
+                        <div className="flex justify-between items-center text-xs text-muted-foreground">
+                            <span>{article.date}</span>
+                            <button 
+                                onClick={(e) => { e.stopPropagation(); handleDelete(article.id); }}
+                                className="text-red-500 hover:text-red-600 px-2 py-1 rounded hover:bg-red-50 dark:hover:bg-red-900/20"
+                            >
+                                Del
+                            </button>
+                        </div>
+                    </div>
+                    ))}
+                 </div>
                  {articles.length === 0 && (
-                   <p className="text-muted-foreground text-center py-8">No articles yet.</p>
+                   <p className="text-muted-foreground text-center py-8 text-sm">No articles yet.</p>
                  )}
                </div>
              </FadeIn>
