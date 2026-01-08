@@ -74,23 +74,14 @@ export function Navbar() {
 
   return (
     <>
-      {/* Top Notice Bar - Apple Style */}
-      {!isScrolled && (
-          <div className="bg-[#f5f5f7] dark:bg-[#1d1d1f] text-[12px] py-3 text-center text-[#1d1d1f] dark:text-[#f5f5f7] relative z-[60]">
-             <Container>
-                <span>选购新春好礼，以确保在你想要的时间内准时送达。 <a href="#" className="text-[#0066cc] hover:underline">选购 ›</a></span>
-             </Container>
-          </div>
-      )}
-
       <motion.header
         className={cn(
-          "fixed left-0 right-0 z-50 transition-all duration-300",
-          isScrolled 
+          "fixed top-0 left-0 right-0 z-50 transition-colors duration-300",
+          isScrolled || isMobileMenuOpen
             ? "top-0 bg-white/80 dark:bg-[#1d1d1f]/80 backdrop-blur-xl border-b border-neutral-200/50 dark:border-white/10"
-            : "top-[40px] bg-transparent" // Adjust top position based on notice bar height (approx 40px)
+            : "top-0 md:top-[40px] bg-transparent" // Adjust top position, mobile ignores top bar for now
         )}
-        initial={{ y: 0 }}
+        initial={{ y: -100 }}
         animate={{ y: 0 }}
         transition={{ duration: 0.5 }}
       >
