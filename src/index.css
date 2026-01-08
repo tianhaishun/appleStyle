@@ -59,17 +59,27 @@
   }
 }
 
-/* Custom scrollbar for webkit */
-::-webkit-scrollbar {
-  width: 8px;
+/* Markdown Editor Custom Styles */
+[data-color-mode*='dark'] .w-md-editor, 
+[data-color-mode*='dark'] .w-md-editor-content-preview {
+  background-color: transparent !important;
+  color: hsl(var(--foreground)) !important;
 }
-::-webkit-scrollbar-track {
-  background: transparent;
+
+[data-color-mode*='light'] .w-md-editor, 
+[data-color-mode*='light'] .w-md-editor-content-preview {
+  background-color: white !important;
+  color: hsl(var(--foreground)) !important;
 }
-::-webkit-scrollbar-thumb {
-  background: hsl(var(--muted-foreground) / 0.3);
-  border-radius: 10px;
+
+.w-md-editor-fullscreen {
+  z-index: 1000 !important;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: hsl(var(--muted-foreground) / 0.5);
+
+.w-md-editor-text-pre > code,
+.w-md-editor-text-input,
+.w-md-editor-text {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace !important;
+  font-size: 16px !important;
+  line-height: 1.6 !important;
 }
