@@ -11,23 +11,23 @@ export function Hero() {
       <Container className="relative z-10 flex flex-col items-center text-center">
         <FadeIn delay={0.2}>
           <h1 className="text-5xl md:text-7xl lg:text-8xl font-semibold tracking-tight text-foreground mb-6 max-w-4xl mx-auto leading-[1.1]">
-            Simplicity is the ultimate sophistication.
+            至繁归于至简。
           </h1>
         </FadeIn>
         
         <FadeIn delay={0.4}>
           <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto font-normal">
-            Exploring the intersection of design, technology, and minimalist living.
+            探索设计、技术与极简生活的交汇点。
           </p>
         </FadeIn>
 
         <FadeIn delay={0.6}>
           <div className="flex gap-4">
-             <Button size="lg" className="rounded-full px-8 text-lg h-14">
-               Read Articles
+             <Button size="lg" className="rounded-full px-8 text-lg h-14" onClick={() => document.getElementById('articles')?.scrollIntoView({ behavior: 'smooth' })}>
+               阅读文章
              </Button>
-             <Button variant="outline" size="lg" className="rounded-full px-8 text-lg h-14 border-neutral-300 dark:border-neutral-700">
-               My Projects
+             <Button variant="outline" size="lg" className="rounded-full px-8 text-lg h-14 border-neutral-300 dark:border-neutral-700" onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}>
+               我的项目
              </Button>
           </div>
         </FadeIn>

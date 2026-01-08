@@ -1,29 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/ui/Container";
 import { Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-
-const navLinks = [
-  { name: "Store", href: "#" },
-  { name: "Mac", href: "#" },
-  { name: "iPad", href: "#" },
-  { name: "iPhone", href: "#" },
-  { name: "Watch", href: "#" },
-  { name: "Vision", href: "#" },
-  { name: "AirPods", href: "#" },
-  { name: "TV & Home", href: "#" },
-  { name: "Entertainment", href: "#" },
-  { name: "Accessories", href: "#" },
-  { name: "Support", href: "#" },
-];
 
 // For a blog, let's adapt:
 const blogLinks = [
-  { name: "Articles", href: "#articles" },
-  { name: "Projects", href: "#projects" },
-  { name: "About", href: "#about" },
+  { name: "首页", href: "/" },
+  { name: "文章", href: "#articles" }, // In a real app with routing, this might be /articles
+  { name: "项目", href: "#projects" },
+  { name: "关于我", href: "#about" },
 ];
 
 export function Navbar() {
@@ -61,11 +47,11 @@ export function Navbar() {
 
             {/* Logo - Centered on mobile, Left/Center on Desktop */}
             <a href="/" className="text-xl font-semibold tracking-tight md:absolute md:left-6 lg:left-8">
-               Blog
+               tianhaishun
             </a>
 
             {/* Desktop Navigation */}
-            <nav className="hidden md:flex items-center space-x-8 text-xs font-medium text-foreground/80">
+            <nav className="hidden md:flex items-center space-x-8 text-sm font-medium text-foreground/80">
               {blogLinks.map((link) => (
                 <a
                   key={link.name}
