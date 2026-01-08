@@ -5,7 +5,6 @@ const supabaseUrl = import.meta.env.VITE_SUPABASE_URL;
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY;
 
 if (!supabaseUrl || !supabaseAnonKey) {
-  // Only throw if we are not in a test environment or if we actually need it to run
   console.warn('Missing Supabase environment variables. Please check your .env file.');
 }
 
@@ -26,4 +25,5 @@ export type Article = {
   content: string;
   created_at: string;
   updated_at: string;
+  user_id: string; // Added user_id
 };
