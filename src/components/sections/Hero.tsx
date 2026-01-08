@@ -1,8 +1,10 @@
 import { Container } from "@/components/ui/Container";
 import { FadeIn } from "@/components/animations/FadeIn";
 import { Button } from "@/components/ui/Button";
+import { useNavigate } from "react-router-dom";
 
 export function Hero() {
+  const navigate = useNavigate();
   return (
     <section className="relative h-[90vh] min-h-[700px] flex items-center justify-center overflow-hidden">
       {/* Apple CNY Gradient Background */}
