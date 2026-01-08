@@ -201,9 +201,14 @@ export default function Editor() {
                         <MDEditor
                             value={formData.content}
                             onChange={(val) => setFormData({...formData, content: val || ""})}
-                            height={400}
+                            height={600}
                             preview="edit"
-                            className="rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-700"
+                            className="rounded-xl overflow-hidden border border-neutral-200 dark:border-neutral-700 !bg-transparent"
+                            style={{ backgroundColor: 'transparent' }}
+                            textareaProps={{
+                                placeholder: "Start writing your masterpiece...",
+                                style: { fontSize: 16, lineHeight: 1.6 }
+                            }}
                         />
                     </div>
                   </div>
