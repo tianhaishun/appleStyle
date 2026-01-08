@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { FadeIn } from "@/components/animations/FadeIn";
 import { generateSlug } from "@/lib/utils";
+import MDEditor from "@uiw/react-md-editor";
 
 export default function Editor() {
   const [articles, setArticles] = useState<Article[]>([]);
