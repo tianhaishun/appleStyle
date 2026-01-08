@@ -32,8 +32,8 @@ export function Hero() {
         </FadeIn>
 
         <FadeIn delay={0.6}>
-          <div className="flex gap-6">
-             <Button size="lg" className="rounded-full px-8 text-lg h-12 bg-[#0071e3] hover:bg-[#0077ed] text-white border-none shadow-none font-normal" onClick={() => document.getElementById('articles')?.scrollIntoView({ behavior: 'smooth' })}>
+          <div className="flex gap-6 z-20 relative">
+             <Button size="lg" className="rounded-full px-8 text-lg h-12 bg-[#0071e3] hover:bg-[#0077ed] text-white border-none shadow-none font-normal" onClick={() => navigate('/blog')}>
                阅读文章
              </Button>
              <a href="/projects" className="flex items-center text-[#0066cc] hover:underline text-lg font-normal h-12">

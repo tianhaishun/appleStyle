@@ -44,12 +44,17 @@ export default function Blog() {
     <div className="bg-background min-h-screen flex flex-col font-sans selection:bg-black selection:text-white">
       <Navbar />
       <main className="flex-grow pt-20">
-        <Section id="articles">
+        <Section id="articles" className="bg-[#f5f5f7] dark:bg-black py-24 md:py-32">
           <FadeIn>
-            <div className="flex justify-between items-end mb-12">
-              <h2 className="text-3xl md:text-5xl font-semibold tracking-tight">最新文章</h2>
+            <div className="flex justify-between items-end mb-12 px-4">
+              <div>
+                  <h2 className="text-4xl md:text-6xl font-bold tracking-tight text-[#1d1d1f] dark:text-[#f5f5f7] mb-4">最新文章</h2>
+                  <p className="text-xl text-neutral-500 max-w-xl">
+                    记录思维的火花，分享技术的见解。
+                  </p>
+              </div>
               {user && (
-                <Button onClick={() => navigate('/editor')} className="gap-2">
+                <Button onClick={() => navigate('/editor')} className="gap-2 rounded-full px-6">
                   <PenSquare size={16} />
                   写文章
                 </Button>
@@ -61,67 +66,51 @@ export default function Blog() {
             <div className="py-20 text-center text-neutral-500">Loading articles...</div>
           ) : articles.length > 0 ? (
             <FadeInStagger>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(200px,auto)]">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 px-4">
                 {articles.map((article) => (
-                  <FadeIn key={article.id} className="relative group overflow-hidden rounded-[2rem] border border-neutral-200/60 dark:border-neutral-800 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 hover:scale-[1.01] bg-white dark:bg-neutral-900">
+                  <FadeIn key={article.id} className="relative group overflow-hidden rounded-[30px] transition-all duration-500 hover:scale-[1.02] cursor-pointer bg-white dark:bg-[#1d1d1f] shadow-sm hover:shadow-2xl hover:shadow-black/10 h-[500px] flex flex-col">
                       {/* Link needs z-index to stay on top */}
                       <Link to={`/articles/${article.slug}`} className="absolute inset-0 z-20 block">
                         <span className="sr-only">阅读文章</span>
                       </Link>
                       
-                      {/* Content with lower z-index */}
-                      <div className="absolute inset-0 p-8 flex flex-col justify-between h-full z-10 pointer-events-none">
-                        <div className="flex justify-between items-start">
-                          <span className="text-xs font-semibold uppercase tracking-wider opacity-70 text-neutral-500">
-                              {article.category}
-                          </span>
-                        </div>
+                      {/* Content */}
+                      <div className="p-10 relative z-10 flex flex-col items-start h-full">
+                        <span className="text-xs font-bold uppercase tracking-wider text-neutral-500 mb-2">
+                            {article.category}
+                        </span>
+                        
+                        <h3 className="text-3xl font-bold mb-3 text-[#1d1d1f] dark:text-[#f5f5f7] leading-tight group-hover:text-[#0066cc] transition-colors">
+                          {article.title}
+                        </h3>
+                        
+                        <p className="text-sm text-neutral-500 mb-4 font-medium">{article.date}</p>
+                        
+                        <p className="text-lg text-neutral-500 line-clamp-3 mb-8">
+                          {article.description}
+                        </p>
 
-                        <div>
-                          <h3 className="text-xl md:text-2xl font-semibold mb-2 leading-tight text-foreground">
-                            {article.title}
-                          </h3>
-                          <p className="text-sm text-neutral-500 mb-4">{article.date}</p>
-                          <p className="text-base text-neutral-600 dark:text-neutral-400 line-clamp-2">
-                            {article.description}
-                          </p>
-                        </div>
+                         <div className="mt-auto">
+                            <span className="inline-flex items-center justify-center rounded-full bg-[#0071e3] text-white px-5 py-2 text-sm font-medium group-hover:bg-[#0077ed] transition-colors">
+                               阅读全文
+                            </span>
+                         </div>
+                      </div>
+                      
+                      {/* Decorative Background */}
+                      <div className="absolute inset-0 z-0 transition-transform duration-700 group-hover:scale-105 bg-neutral-100 dark:bg-neutral-800">
+                         <div className="absolute inset-0 bg-gradient-to-t from-white/80 via-transparent to-transparent dark:from-[#1d1d1f]/90" />
                       </div>
                   </FadeIn>
                 ))}
-
-                {/* About Me Card */}
-                <FadeIn className="relative group overflow-hidden rounded-[2rem] border border-neutral-200/60 dark:border-neutral-800 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 hover:scale-[1.01] bg-neutral-900 text-white md:col-span-1">
-                    <a href="https://github.com/tianhaishun" target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-10 block">
-                      <span className="sr-only">关于我</span>
-                    </a>
-                    
-                    <div className="absolute inset-0 p-8 flex flex-col justify-between h-full">
-                      <div className="flex justify-between items-start">
-                          <span className="text-xs font-semibold uppercase tracking-wider opacity-70 text-neutral-300">
-                            关于我
-                          </span>
-                          <ArrowUpRight className="w-5 h-5 opacity-0 -translate-y-2 translate-x-2 transition-all duration-300 group-hover:opacity-100 group-hover:translate-y-0 group-hover:translate-x-0 text-white" />
-                      </div>
-
-                      <div>
-                        <h3 className="text-2xl md:text-3xl font-semibold mb-2 leading-tight">
-                          Tianhaishun
-                        </h3>
-                        <p className="text-base opacity-80 text-neutral-300">
-                          热爱开源与分享的开发者。
-                        </p>
-                      </div>
-                    </div>
-                </FadeIn>
               </div>
             </FadeInStagger>
           ) : (
             <div className="py-20 text-center text-neutral-500">
-              <p>暂无文章。</p>
+              <p className="text-xl mb-4">暂无文章。</p>
               {!user && (
-                 <p className="mt-4">
-                   <Link to="/register" className="text-blue-600 hover:underline">注册账号</Link> 成为第一个作者。
+                 <p>
+                   <Link to="/register" className="text-[#0066cc] hover:underline font-medium">注册账号</Link> 成为第一个作者。
                  </p>
               )}
             </div>
