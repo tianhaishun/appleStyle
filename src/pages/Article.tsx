@@ -1,23 +1,36 @@
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/animations/FadeIn";
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, Navigate, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase, type Article } from "@/lib/supabase";
 import ReactMarkdown from "react-markdown";
 import rehypeHighlight from "rehype-highlight";
+import { Button } from "@/components/ui/Button";
 
 export default function ArticlePage() {
   const { slug } = useParams();
   const [article, setArticle] = useState<Article | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState<any>(null);
+  const navigate = useNavigate();
   
+  // Comments state
+  const [comments, setComments] = useState<any[]>([]);
+  const [newComment, setNewComment] = useState("");
+  const [isSubmittingComment, setIsSubmittingComment] = useState(false);
+
   useEffect(() => {
-    async function fetchArticle() {
+    async function fetchArticleAndUser() {
       if (!slug) return;
       
       try {
-        const { data, error } = await supabase
+        // Get Current User
+        const { data: { session } } = await supabase.auth.getSession();
+        setCurrentUser(session?.user || null);
+
+        // Get Article
+        const { data: articleData, error } = await supabase
           .from('articles')
           .select('*')
           .eq('slug', slug)
@@ -26,7 +39,9 @@ export default function ArticlePage() {
         if (error) {
           console.error('Error fetching article:', error);
         } else {
-          setArticle(data);
+          setArticle(articleData);
+          // Fetch comments for this article
+          fetchComments(articleData.id);
         }
       } catch (err) {
         console.error('Unexpected error:', err);
@@ -35,9 +50,53 @@ export default function ArticlePage() {
       }
     }
 
-    fetchArticle();
+    fetchArticleAndUser();
     window.scrollTo(0, 0);
   }, [slug]);
+
+  const fetchComments = async (articleId: string) => {
+      const { data } = await supabase
+        .from('comments')
+        .select('*')
+        .eq('article_id', articleId)
+        .order('created_at', { ascending: true });
+      setComments(data || []);
+  };
+
+  const handleDelete = async () => {
+    if (!article) return;
+    if (!confirm("Are you sure you want to delete this article?")) return;
+    
+    await supabase.from('articles').delete().eq('id', article.id);
+    navigate('/');
+  };
+
+  const handlePostComment = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newComment.trim() || !currentUser || !article) return;
+
+    setIsSubmittingComment(true);
+    const { error } = await supabase.from('comments').insert([{
+        article_id: article.id,
+        user_id: currentUser.id,
+        content: newComment,
+        author_email: currentUser.email // Storing email for display as per migration
+    }]);
+
+    if (error) {
+        alert("Failed to post comment");
+    } else {
+        setNewComment("");
+        fetchComments(article.id);
+    }
+    setIsSubmittingComment(false);
+  };
+
+  const handleDeleteComment = async (commentId: string) => {
+      if (!confirm("Delete this comment?")) return;
+      await supabase.from('comments').delete().eq('id', commentId);
+      if (article) fetchComments(article.id);
+  };
 
   if (isLoading) {
     return (
