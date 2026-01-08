@@ -69,10 +69,15 @@ export default function Editor() {
     setLoading(true);
 
     try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) throw new Error("No session");
+
+      const payload = { ...formData, user_id: session.user.id };
+
       if (editingId) {
-        await supabase.from('articles').update(formData).eq('id', editingId);
+        await supabase.from('articles').update(payload).eq('id', editingId);
       } else {
-        await supabase.from('articles').insert([formData]);
+        await supabase.from('articles').insert([payload]);
       }
       fetchArticles();
       handleReset();

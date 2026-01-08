@@ -2,12 +2,15 @@ import { useState } from "react";
 import { motion, useScroll, useMotionValueEvent } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Container } from "@/components/ui/Container";
-import { Menu, X, Sun, Moon } from "lucide-react";
+import { Menu, X, Sun, Moon, User } from "lucide-react";
 import { useTheme } from "@/hooks/useTheme";
 import { Link, useLocation } from "react-router-dom";
+import { supabase } from "@/lib/supabase";
+import { useEffect } from "react";
 
 const blogLinks = [
   { name: "首页", href: "/" },
+  { name: "文章", href: "/blog" },
   { name: "关于我", href: "/about" },
 ];
 
@@ -17,6 +20,21 @@ export function Navbar() {
   const { scrollY } = useScroll();
   const { isDark, toggleTheme } = useTheme();
   const location = useLocation();
+  const [user, setUser] = useState<any>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
 
   useMotionValueEvent(scrollY, "change", (latest) => {
     setIsScrolled(latest > 0);
@@ -88,14 +106,22 @@ export function Navbar() {
               {/* Internal anchor links for home page only */}
               {location.pathname === "/" && (
                 <>
-                  <button onClick={() => document.getElementById('articles')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-foreground transition-colors">文章</button>
                   <button onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-foreground transition-colors">项目</button>
                 </>
               )}
             </nav>
 
             {/* Dark Mode Toggle - Right side */}
-            <div className="absolute right-6 lg:right-8 flex items-center">
+            <div className="absolute right-6 lg:right-8 flex items-center gap-4">
+               {user ? (
+                 <Link to="/editor" className="hidden md:flex items-center gap-2 text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
+                    <User size={18} />
+                 </Link>
+               ) : (
+                 <Link to="/admin/login" className="hidden md:block text-sm font-medium text-foreground/80 hover:text-foreground transition-colors">
+                   登录
+                 </Link>
+               )}
                <button
                  onClick={toggleTheme}
                  className="p-2 rounded-full hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors text-foreground/80 hover:text-foreground"
@@ -128,8 +154,14 @@ export function Navbar() {
                   {link.name}
                 </Link>
               ))}
-               <button onClick={() => { handleLinkClick('#articles'); }} className="text-left text-foreground/80 hover:text-foreground">文章</button>
                <button onClick={() => { handleLinkClick('#projects'); }} className="text-left text-foreground/80 hover:text-foreground">项目</button>
+               <div className="border-t border-neutral-200 dark:border-neutral-800 pt-6">
+                 {user ? (
+                   <Link to="/editor" onClick={() => setIsMobileMenuOpen(false)} className="block text-foreground/80 hover:text-foreground">我的文章</Link>
+                 ) : (
+                   <Link to="/admin/login" onClick={() => setIsMobileMenuOpen(false)} className="block text-foreground/80 hover:text-foreground">登录 / 注册</Link>
+                 )}
+               </div>
             </div>
           </motion.div>
         )}
