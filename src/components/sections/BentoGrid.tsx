@@ -3,10 +3,37 @@ import { FadeIn, FadeInStagger } from "@/components/animations/FadeIn";
 import { cn } from "@/lib/utils";
 import { ArrowUpRight } from "lucide-react";
 import { projects } from "@/data/projects";
-import { articles } from "@/data/articles";
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { supabase, type Article } from "@/lib/supabase";
 
 export function BentoGrid() {
+  const [articles, setArticles] = useState<Article[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchArticles() {
+      try {
+        const { data, error } = await supabase
+          .from('articles')
+          .select('*')
+          .order('date', { ascending: false }); // Assuming date is sortable string or we might need to parse it
+
+        if (error) {
+          console.error('Error fetching articles:', error);
+        } else {
+          setArticles(data || []);
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchArticles();
+  }, []);
+
   return (
     <>
       <Section id="projects">
@@ -45,7 +72,7 @@ export function BentoGrid() {
         </FadeInStagger>
       </Section>
 
-      {articles.length > 0 && (
+      {!isLoading && articles.length > 0 && (
         <Section id="articles" className="pt-0">
           <FadeIn>
             <h2 className="text-3xl md:text-5xl font-semibold mb-12 tracking-tight">最新文章</h2>
@@ -53,8 +80,8 @@ export function BentoGrid() {
           
           <FadeInStagger>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(200px,auto)]">
-              {articles.map((article, index) => (
-                <FadeIn key={index} className="relative group overflow-hidden rounded-[2rem] border border-neutral-200/60 dark:border-neutral-800 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 hover:scale-[1.01] bg-white dark:bg-neutral-900">
+              {articles.map((article) => (
+                <FadeIn key={article.id} className="relative group overflow-hidden rounded-[2rem] border border-neutral-200/60 dark:border-neutral-800 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 hover:scale-[1.01] bg-white dark:bg-neutral-900">
                     <Link to={`/articles/${article.slug}`} className="absolute inset-0 z-10 block">
                       <span className="sr-only">阅读文章</span>
                     </Link>
@@ -79,7 +106,7 @@ export function BentoGrid() {
                 </FadeIn>
               ))}
 
-              {/* About Me Card - Only show in grid if we have articles, otherwise it might look lonely or we rely on the main About page */}
+              {/* About Me Card - Only show in grid if we have articles */}
               <FadeIn className="relative group overflow-hidden rounded-[2rem] border border-neutral-200/60 dark:border-neutral-800 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 hover:scale-[1.01] bg-neutral-900 text-white md:col-span-1">
                   <a href="https://github.com/tianhaishun" target="_blank" rel="noopener noreferrer" className="absolute inset-0 z-10 block">
                     <span className="sr-only">关于我</span>

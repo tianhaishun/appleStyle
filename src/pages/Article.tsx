@@ -2,23 +2,56 @@ import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
 import { FadeIn } from "@/components/animations/FadeIn";
 import { useParams, Navigate } from "react-router-dom";
-import { articles } from "@/data/articles";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { supabase, type Article } from "@/lib/supabase";
 
-export default function Article() {
+export default function ArticlePage() {
   const { slug } = useParams();
+  const [article, setArticle] = useState<Article | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   
-  // Find article by slug
-  const article = articles.find((a) => a.slug === slug);
-
-  // Scroll to top on mount
   useEffect(() => {
+    async function fetchArticle() {
+      if (!slug) return;
+      
+      try {
+        const { data, error } = await supabase
+          .from('articles')
+          .select('*')
+          .eq('slug', slug)
+          .single();
+
+        if (error) {
+          console.error('Error fetching article:', error);
+        } else {
+          setArticle(data);
+        }
+      } catch (err) {
+        console.error('Unexpected error:', err);
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchArticle();
     window.scrollTo(0, 0);
   }, [slug]);
 
+  if (isLoading) {
+    return (
+      <div className="bg-background min-h-screen flex flex-col font-sans">
+        <Navbar />
+        <main className="flex-grow pt-32 pb-20 flex items-center justify-center">
+          <div className="animate-pulse text-muted-foreground">Loading...</div>
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   // If article not found, redirect to home (or 404 page in a real app)
   if (!article) {
-    return <Navigate to="/" replace />;
+    return <Navigate to="/404" replace />;
   }
 
   return (
@@ -35,7 +68,7 @@ export default function Article() {
               <div className="flex items-center justify-center space-x-4 text-sm text-muted-foreground">
                 <time>{article.date}</time>
                 <span>•</span>
-                <span>{article.readTime}</span>
+                <span>{article.read_time}</span>
               </div>
             </div>
           </FadeIn>

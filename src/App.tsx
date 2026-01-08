@@ -4,6 +4,8 @@ import Home from "@/pages/Home";
 import Article from "@/pages/Article";
 import About from "@/pages/About";
 import NotFound from "@/pages/NotFound";
+import Login from "@/pages/admin/Login";
+import Editor from "@/pages/admin/Editor";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -23,8 +25,10 @@ export default function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/articles/:slug" element={<Article />} />
-        {/* For demo purposes, keep the direct link just in case, though dynamic route handles it */}
-        <Route path="/articles/minimalism" element={<Article />} />
+        
+        {/* Admin Routes */}
+        <Route path="/admin/login" element={<Login />} />
+        <Route path="/admin/editor" element={<Editor />} />
         
         {/* Catch-all route for 404 */}
         <Route path="*" element={<NotFound />} />
