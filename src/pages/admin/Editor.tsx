@@ -4,7 +4,6 @@ import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { FadeIn } from "@/components/animations/FadeIn";
-import { generateSlug } from "@/lib/utils";
 
 export default function Editor() {
   const [articles, setArticles] = useState<Article[]>([]);
@@ -126,7 +125,16 @@ export default function Editor() {
                       <input
                         className="w-full px-4 py-2 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
                         value={formData.title}
-                        onChange={(e) => setFormData({...formData, title: e.target.value})}
+                        onChange={(e) => {
+                           const title = e.target.value;
+                           // Auto-generate slug if it's empty or looks like an auto-generated one
+                           const shouldUpdateSlug = !formData.slug || formData.slug === generateSlug(formData.title);
+                           setFormData({
+                             ...formData, 
+                             title,
+                             slug: shouldUpdateSlug ? generateSlug(title) : formData.slug
+                           });
+                        }}
                         required
                       />
                     </div>
