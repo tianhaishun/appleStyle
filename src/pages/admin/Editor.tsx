@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase, type Article } from "@/lib/supabase";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { FadeIn } from "@/components/animations/FadeIn";
@@ -10,6 +10,7 @@ import MDEditor from "@uiw/react-md-editor";
 export default function Editor() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [searchParams] = useSearchParams(); // Support ?id=...
   const [formData, setFormData] = useState({
     title: "",
     slug: "",
@@ -22,17 +23,36 @@ export default function Editor() {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
-  // Check auth
+  // Check auth and load article if id is present
   useEffect(() => {
     const checkUser = async () => {
       const { data: { session } } = await supabase.auth.getSession();
       if (!session) {
         navigate("/admin/login");
+        return;
+      }
+
+      // Check for ?id=... in URL
+      const idFromUrl = searchParams.get("id");
+      if (idFromUrl) {
+         const { data: article } = await supabase.from('articles').select('*').eq('id', idFromUrl).single();
+         if (article && article.user_id === session.user.id) {
+             setEditingId(article.id);
+             setFormData({
+               title: article.title,
+               slug: article.slug,
+               category: article.category,
+               date: article.date,
+               read_time: article.read_time,
+               description: article.description,
+               content: article.content,
+             });
+         }
       }
     };
     checkUser();
     fetchArticles();
-  }, [navigate]);
+  }, [navigate, searchParams]);
 
   const fetchArticles = async () => {
     const { data } = await supabase.from('articles').select('*').order('created_at', { ascending: false });
