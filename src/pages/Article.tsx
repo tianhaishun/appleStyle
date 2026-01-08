@@ -76,10 +76,11 @@ export default function ArticlePage() {
           </FadeIn>
 
           <FadeIn delay={0.2}>
-             <div 
-               className="prose prose-lg prose-neutral dark:prose-invert mx-auto"
-               dangerouslySetInnerHTML={{ __html: article.content }}
-             />
+             <div className="prose prose-lg prose-neutral dark:prose-invert mx-auto">
+               <ReactMarkdown rehypePlugins={[rehypeHighlight]}>
+                 {article.content}
+               </ReactMarkdown>
+             </div>
           </FadeIn>
         </article>
       </main>
