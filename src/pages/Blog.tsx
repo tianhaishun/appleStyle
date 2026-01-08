@@ -64,11 +64,13 @@ export default function Blog() {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 auto-rows-[minmax(200px,auto)]">
                 {articles.map((article) => (
                   <FadeIn key={article.id} className="relative group overflow-hidden rounded-[2rem] border border-neutral-200/60 dark:border-neutral-800 transition-all duration-300 hover:shadow-xl hover:shadow-black/5 hover:scale-[1.01] bg-white dark:bg-neutral-900">
-                      <Link to={`/articles/${article.slug}`} className="absolute inset-0 z-10 block">
+                      {/* Link needs z-index to stay on top */}
+                      <Link to={`/articles/${article.slug}`} className="absolute inset-0 z-20 block">
                         <span className="sr-only">阅读文章</span>
                       </Link>
                       
-                      <div className="absolute inset-0 p-8 flex flex-col justify-between h-full">
+                      {/* Content with lower z-index */}
+                      <div className="absolute inset-0 p-8 flex flex-col justify-between h-full z-10 pointer-events-none">
                         <div className="flex justify-between items-start">
                           <span className="text-xs font-semibold uppercase tracking-wider opacity-70 text-neutral-500">
                               {article.category}

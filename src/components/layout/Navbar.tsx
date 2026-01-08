@@ -11,6 +11,7 @@ import { useEffect } from "react";
 const blogLinks = [
   { name: "首页", href: "/" },
   { name: "文章", href: "/blog" },
+  { name: "项目", href: "/projects" },
   { name: "关于我", href: "/about" },
 ];
 
@@ -123,12 +124,6 @@ export function Navbar() {
                   {link.name}
                 </Link>
               ))}
-              {/* Internal anchor links for home page only */}
-              {location.pathname === "/" && (
-                <>
-                  <button onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })} className="hover:text-foreground transition-colors">项目</button>
-                </>
-              )}
             </nav>
 
             {/* Dark Mode Toggle - Right side */}
@@ -155,13 +150,13 @@ export function Navbar() {
                                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
                                  </div>
                                  <Link to="/dashboard" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
-                                     <LayoutDashboard size={16} /> Dashboard
+                                     <LayoutDashboard size={16} /> 仪表盘
                                  </Link>
                                  <Link to="/editor" onClick={() => setIsUserMenuOpen(false)} className="flex items-center gap-2 px-4 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors">
-                                     <PenSquare size={16} /> Write Article
+                                     <PenSquare size={16} /> 写文章
                                  </Link>
                                  <button onClick={handleLogout} className="w-full flex items-center gap-2 px-4 py-2 text-sm text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors text-left">
-                                     <LogOut size={16} /> Logout
+                                     <LogOut size={16} /> 退出登录
                                  </button>
                              </motion.div>
                          )}

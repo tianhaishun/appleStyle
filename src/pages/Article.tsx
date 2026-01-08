@@ -136,10 +136,10 @@ export default function ArticlePage() {
               {currentUser && currentUser.id === article.user_id && (
                   <div className="mt-6 flex justify-center gap-4">
                       <Button variant="outline" size="sm" onClick={() => navigate(`/editor?id=${article.id}`)}>
-                          Edit Article
+                          编辑文章
                       </Button>
                       <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600 hover:bg-red-50" onClick={handleDelete}>
-                          Delete Article
+                          删除文章
                       </Button>
                   </div>
               )}
@@ -157,7 +157,7 @@ export default function ArticlePage() {
           {/* Comments Section */}
           <FadeIn delay={0.3}>
               <div className="max-w-2xl mx-auto border-t border-neutral-200 dark:border-neutral-800 pt-12">
-                  <h3 className="text-2xl font-bold mb-8">Comments ({comments.length})</h3>
+                  <h3 className="text-2xl font-bold mb-8">评论 ({comments.length})</h3>
                   
                   {/* Comment List */}
                   <div className="space-y-8 mb-12">
@@ -168,18 +168,18 @@ export default function ArticlePage() {
                               </div>
                               <div className="flex-1">
                                   <div className="flex items-center justify-between mb-1">
-                                      <span className="font-semibold text-sm">{comment.author_email?.split('@')[0] || "Anonymous"}</span>
+                                      <span className="font-semibold text-sm">{comment.author_email?.split('@')[0] || "匿名用户"}</span>
                                       <span className="text-xs text-muted-foreground">{new Date(comment.created_at).toLocaleDateString()}</span>
                                   </div>
                                   <p className="text-neutral-700 dark:text-neutral-300 text-sm leading-relaxed">{comment.content}</p>
                                   {currentUser && (currentUser.id === comment.user_id || currentUser.id === article.user_id) && (
-                                      <button onClick={() => handleDeleteComment(comment.id)} className="text-xs text-red-500 hover:underline mt-2">Delete</button>
+                                      <button onClick={() => handleDeleteComment(comment.id)} className="text-xs text-red-500 hover:underline mt-2">删除</button>
                                   )}
                               </div>
                           </div>
                       ))}
                       {comments.length === 0 && (
-                          <p className="text-muted-foreground text-center py-4 italic">No comments yet. Be the first to share your thoughts.</p>
+                          <p className="text-muted-foreground text-center py-4 italic">暂无评论。来发表第一个评论吧！</p>
                       )}
                   </div>
 
@@ -189,21 +189,21 @@ export default function ArticlePage() {
                           <textarea
                               className="w-full p-4 rounded-2xl bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all resize-none"
                               rows={4}
-                              placeholder="Write a thoughtful comment..."
+                              placeholder="写下您的评论..."
                               value={newComment}
                               onChange={(e) => setNewComment(e.target.value)}
                               required
                           />
                           <div className="mt-2 flex justify-end">
                               <Button disabled={isSubmittingComment}>
-                                  {isSubmittingComment ? "Posting..." : "Post Comment"}
+                                  {isSubmittingComment ? "提交中..." : "发表评论"}
                               </Button>
                           </div>
                       </form>
                   ) : (
                       <div className="bg-neutral-50 dark:bg-neutral-900 p-8 rounded-2xl text-center border border-neutral-200 dark:border-neutral-800">
-                          <p className="mb-4 text-neutral-600 dark:text-neutral-400">Join the conversation.</p>
-                          <Button onClick={() => navigate('/admin/login')}>Sign in to Comment</Button>
+                          <p className="mb-4 text-neutral-600 dark:text-neutral-400">参与讨论</p>
+                          <Button onClick={() => navigate('/admin/login')}>登录发表评论</Button>
                       </div>
                   )}
               </div>

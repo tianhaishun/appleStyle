@@ -134,12 +134,12 @@ export default function Editor() {
         <div className="max-w-[1600px] mx-auto px-6 h-16 flex items-center justify-between">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm" onClick={() => navigate("/")} className="-ml-2">
-              ← Back
+              ← 返回
             </Button>
             <div className="h-6 w-px bg-neutral-200 dark:bg-neutral-800" />
             <input
               className="bg-transparent text-lg font-bold focus:outline-none w-[300px] md:w-[500px]"
-              placeholder="Enter post title..."
+              placeholder="输入文章标题..."
               value={formData.title}
               onChange={(e) => {
                  const title = e.target.value;
@@ -154,14 +154,14 @@ export default function Editor() {
           </div>
           <div className="flex items-center gap-3">
              <span className="text-xs text-muted-foreground hidden md:inline-block">
-               {loading ? "Saving..." : "Changes saved locally"}
+               {loading ? "正在保存..." : "修改已保存"}
              </span>
              <Button 
                onClick={handleSubmit} 
                disabled={loading} 
                className="rounded-full px-6"
              >
-               {editingId ? "Update" : "Publish"}
+               {editingId ? "更新" : "发布"}
              </Button>
           </div>
         </div>
@@ -183,7 +183,7 @@ export default function Editor() {
                     className="!border-none !shadow-none !bg-transparent"
                     style={{ backgroundColor: 'transparent' }}
                     textareaProps={{
-                        placeholder: "Tell your story...",
+                        placeholder: "开始讲述您的故事...",
                         style: { fontSize: 18, lineHeight: 1.8, fontFamily: 'ui-serif, Georgia, Cambria, "Times New Roman", Times, serif' }
                     }}
                 />
@@ -195,11 +195,11 @@ export default function Editor() {
         <div className="border-l border-neutral-200 dark:border-neutral-800 bg-neutral-50/50 dark:bg-neutral-900/20 p-6 space-y-8 hidden lg:block h-[calc(100vh-64px)] sticky top-16 overflow-y-auto">
           
           <div className="space-y-4">
-            <h3 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">Post Settings</h3>
+            <h3 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground">文章设置</h3>
             
             <div className="space-y-4">
               <div>
-                <label className="block text-xs font-medium mb-1.5 text-muted-foreground">URL Slug</label>
+                <label className="block text-xs font-medium mb-1.5 text-muted-foreground">URL 别名 (Slug)</label>
                 <input
                   className="w-full px-3 py-2 text-sm rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
                   value={formData.slug}
@@ -208,17 +208,17 @@ export default function Editor() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium mb-1.5 text-muted-foreground">Category</label>
+                <label className="block text-xs font-medium mb-1.5 text-muted-foreground">分类</label>
                 <input
                   className="w-full px-3 py-2 text-sm rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
                   value={formData.category}
                   onChange={(e) => setFormData({...formData, category: e.target.value})}
-                  placeholder="e.g. Life, Tech"
+                  placeholder="例如：生活, 技术"
                 />
               </div>
 
               <div>
-                <label className="block text-xs font-medium mb-1.5 text-muted-foreground">Publish Date</label>
+                <label className="block text-xs font-medium mb-1.5 text-muted-foreground">发布日期</label>
                 <input
                   className="w-full px-3 py-2 text-sm rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
                   value={formData.date}
@@ -227,7 +227,7 @@ export default function Editor() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium mb-1.5 text-muted-foreground">Read Time</label>
+                <label className="block text-xs font-medium mb-1.5 text-muted-foreground">阅读时间</label>
                 <input
                   className="w-full px-3 py-2 text-sm rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
                   value={formData.read_time}
@@ -236,7 +236,7 @@ export default function Editor() {
               </div>
 
               <div>
-                <label className="block text-xs font-medium mb-1.5 text-muted-foreground">Excerpt</label>
+                <label className="block text-xs font-medium mb-1.5 text-muted-foreground">摘要</label>
                 <textarea
                   className="w-full px-3 py-2 text-sm rounded-lg bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
                   rows={4}
@@ -248,7 +248,7 @@ export default function Editor() {
           </div>
 
           <div className="pt-6 border-t border-neutral-200 dark:border-neutral-800">
-             <h3 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-4">History</h3>
+             <h3 className="font-semibold text-sm uppercase tracking-wider text-muted-foreground mb-4">历史记录</h3>
              <div className="space-y-2">
                 {articles.slice(0, 5).map((article) => (
                   <div key={article.id} className="group flex items-center justify-between text-sm p-2 rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 cursor-pointer transition-colors" onClick={() => handleEdit(article)}>
@@ -266,7 +266,7 @@ export default function Editor() {
 
           <div className="pt-6">
              <Button variant="ghost" className="w-full text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20" onClick={handleLogout}>
-               Log out
+               退出登录
              </Button>
           </div>
 

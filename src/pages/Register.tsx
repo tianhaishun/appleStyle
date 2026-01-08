@@ -27,9 +27,6 @@ export default function Register() {
       setError(error.message);
     } else {
       setSuccess(true);
-      // Optional: Automatically log them in or wait for email confirmation
-      // If auto-confirm is on, they are logged in. 
-      // But usually signUp returns a session if auto-confirm is on.
     }
     setLoading(false);
   };
@@ -40,12 +37,12 @@ export default function Register() {
         <Container className="max-w-md w-full">
           <FadeIn>
             <div className="bg-neutral-50 dark:bg-neutral-900 p-8 rounded-3xl border border-neutral-200/60 dark:border-neutral-800 shadow-sm text-center">
-              <h1 className="text-2xl font-bold mb-4">Registration Successful!</h1>
+              <h1 className="text-2xl font-bold mb-4">注册成功!</h1>
               <p className="text-neutral-600 dark:text-neutral-400 mb-6">
-                Please check your email to confirm your account.
+                请检查您的邮箱以确认您的账户。
               </p>
               <Link to="/admin/login">
-                <Button className="w-full">Go to Login</Button>
+                <Button className="w-full">前往登录</Button>
               </Link>
             </div>
           </FadeIn>
@@ -59,10 +56,10 @@ export default function Register() {
       <Container className="max-w-md w-full">
         <FadeIn>
           <div className="bg-neutral-50 dark:bg-neutral-900 p-8 rounded-3xl border border-neutral-200/60 dark:border-neutral-800 shadow-sm">
-            <h1 className="text-2xl font-bold mb-6 text-center">Create Account</h1>
+            <h1 className="text-2xl font-bold mb-6 text-center">创建账户</h1>
             <form onSubmit={handleRegister} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium mb-1 ml-1">Email</label>
+                <label className="block text-sm font-medium mb-1 ml-1">邮箱</label>
                 <input
                   type="email"
                   value={email}
@@ -72,7 +69,7 @@ export default function Register() {
                 />
               </div>
               <div>
-                <label className="block text-sm font-medium mb-1 ml-1">Password</label>
+                <label className="block text-sm font-medium mb-1 ml-1">密码</label>
                 <input
                   type="password"
                   value={password}
@@ -84,13 +81,13 @@ export default function Register() {
               </div>
               {error && <p className="text-red-500 text-sm">{error}</p>}
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Creating Account..." : "Sign Up"}
+                {loading ? "正在创建..." : "注册"}
               </Button>
             </form>
             <div className="mt-6 text-center text-sm text-neutral-500">
-              Already have an account?{" "}
+              已有账号?{" "}
               <Link to="/admin/login" className="text-blue-600 hover:underline">
-                Sign In
+                登录
               </Link>
             </div>
           </div>

@@ -88,13 +88,13 @@ export default function Dashboard() {
                        
                        <div className="space-y-3">
                            <Button onClick={() => navigate('/editor')} className="w-full gap-2 justify-center">
-                               <PenSquare size={16} /> Write Article
+                               <PenSquare size={16} /> 写文章
                            </Button>
                            <Button variant="outline" onClick={() => setIsResettingPassword(!isResettingPassword)} className="w-full gap-2 justify-center">
-                               <Shield size={16} /> Change Password
+                               <Shield size={16} /> 修改密码
                            </Button>
                            <Button variant="ghost" onClick={handleLogout} className="w-full gap-2 justify-center text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-900/20">
-                               <LogOut size={16} /> Logout
+                               <LogOut size={16} /> 退出登录
                            </Button>
                        </div>
                    </div>
@@ -102,19 +102,19 @@ export default function Dashboard() {
                    {/* Password Reset Form */}
                    {isResettingPassword && (
                        <div className="bg-neutral-50 dark:bg-neutral-900 p-6 rounded-3xl border border-neutral-200/60 dark:border-neutral-800 animate-in fade-in slide-in-from-top-4">
-                           <h3 className="font-semibold mb-4">Update Password</h3>
+                           <h3 className="font-semibold mb-4">修改密码</h3>
                            <form onSubmit={handleUpdatePassword} className="space-y-4">
                                <input 
                                    type="password" 
-                                   placeholder="New Password"
+                                   placeholder="新密码"
                                    className="w-full px-4 py-2 rounded-xl bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-neutral-700"
                                    value={newPassword}
                                    onChange={(e) => setNewPassword(e.target.value)}
                                    required
                                />
                                <div className="flex gap-2">
-                                   <Button type="submit" className="flex-1">Update</Button>
-                                   <Button type="button" variant="outline" onClick={() => setIsResettingPassword(false)}>Cancel</Button>
+                                   <Button type="submit" className="flex-1">更新</Button>
+                                   <Button type="button" variant="outline" onClick={() => setIsResettingPassword(false)}>取消</Button>
                                </div>
                            </form>
                        </div>
@@ -124,7 +124,7 @@ export default function Dashboard() {
                 {/* Main Content / Articles */}
                 <div className="w-full md:w-2/3">
                     <h2 className="text-2xl font-bold mb-6 flex items-center gap-2">
-                        <FileText className="text-blue-500" /> My Articles ({articles.length})
+                        <FileText className="text-blue-500" /> 我的文章 ({articles.length})
                     </h2>
 
                     <div className="space-y-4">
@@ -139,20 +139,20 @@ export default function Dashboard() {
                                         <span>•</span>
                                         <span>{article.category}</span>
                                         <span>•</span>
-                                        <span className={article.published ? "text-green-500" : "text-amber-500"}>Published</span>
+                                        <span className={article.published ? "text-green-500" : "text-amber-500"}>已发布</span>
                                     </div>
                                 </div>
                                 <div className="flex gap-2 shrink-0">
-                                    <Button variant="outline" size="sm" onClick={() => navigate(`/editor?id=${article.id}`)}>Edit</Button>
-                                    <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => handleDeleteArticle(article.id)}>Delete</Button>
+                                    <Button variant="outline" size="sm" onClick={() => navigate(`/editor?id=${article.id}`)}>编辑</Button>
+                                    <Button variant="ghost" size="sm" className="text-red-500 hover:text-red-600 hover:bg-red-50" onClick={() => handleDeleteArticle(article.id)}>删除</Button>
                                 </div>
                             </div>
                         ))}
 
                         {articles.length === 0 && (
                             <div className="text-center py-12 bg-neutral-50 dark:bg-neutral-900 rounded-3xl border border-neutral-200/60 dark:border-neutral-800">
-                                <p className="text-neutral-500 mb-4">You haven't published any articles yet.</p>
-                                <Button onClick={() => navigate('/editor')}>Start Writing</Button>
+                                <p className="text-neutral-500 mb-4">您还没有发布任何文章。</p>
+                                <Button onClick={() => navigate('/editor')}>开始创作</Button>
                             </div>
                         )}
                     </div>
